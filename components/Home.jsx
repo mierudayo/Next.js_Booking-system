@@ -4,7 +4,6 @@ export const Home = () => {
   return (
     <section id="rooms" class="container mt-5">
       <h2 class="mb-3 ml-2 stays-heading">Stays in New York</h2>
-
       <a href="#" class="ml-2 back-to-search">
         {" "}
         <i class="fa fa-arrow-left"></i> Back to Search
