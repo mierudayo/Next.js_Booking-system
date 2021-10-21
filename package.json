@@ -9,11 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.23.0",
     "mongoose": "^6.0.11",
     "next": "11.1.2",
+    "next-absolute-url": "^1.2.2",
     "next-connect": "^0.10.2",
+    "next-redux-wrapper": "^7.0.5",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-redux": "^7.2.5",
+    "redux": "^4.1.1",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "8.0.1",
