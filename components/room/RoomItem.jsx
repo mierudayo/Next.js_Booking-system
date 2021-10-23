@@ -14,7 +14,7 @@ export const RoomItem = ({ room }) => {
         />
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">
-            <Link href={`/room/${room.id}`}>
+            <Link href={`/room/${room._id}`}>
               <a>{room.name}</a>
             </Link>
           </h5>

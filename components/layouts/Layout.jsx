@@ -3,6 +3,8 @@ import Head from "next/head";
 
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Layout = ({
   children,
@@ -15,6 +17,7 @@ export const Layout = ({
         <meta charSet="utf-8" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Header />
+      <ToastContainer position="bottom-right" />
       {children}
       <Footer />
     </div>
