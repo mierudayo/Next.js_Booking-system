@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export const Header = () => {
   return (
@@ -6,11 +7,13 @@ export const Header = () => {
       <div className="container">
         <div className="col-3 p-0">
           <div className="navbar-brand">
-            <img
-              style={{ cursor: "pointer" }}
-              src="../images/bookit_logo.png"
-              alt="BookIT"
-            />
+            <Link href="/">
+              <img
+                style={{ cursor: "pointer" }}
+                src="../images/bookit_logo.png"
+                alt="BookIT"
+              />
+            </Link>
           </div>
         </div>
         <div className="col-3 mt-3 mt-md-0 text-center">

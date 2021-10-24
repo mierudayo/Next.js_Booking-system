@@ -6,6 +6,7 @@ import Head from "next/head";
 import Image from "next/image";
 
 import { clearErrors } from "../../redux/actions/roomActions";
+import { RoomFeatures } from "./RoomFeatures";
 
 export const RoomDetails = () => {
   const dispatch = useDispatch();
@@ -53,45 +54,14 @@ export const RoomDetails = () => {
         <div className="row my-5">
           <div className="col-12 col-md-6 col-lg-8">
             <h3>Description</h3>
-            <p>
-              We are offering fully furnished apartment with your all basic
-              needs being fulfilled. It consists of 2 king size bed room with a
-              beautiful view in the living room, it also has a fully operational
-              kitchen with microwave and basic crockery. Beside all it has a
-              amazing balcony infront of valley view.
-            </p>
-
-            <div className="features mt-5">
-              <h3 className="mb-4">Features:</h3>
-              <div className="room-feature">
-                <i className="fa fa-cog fa-fw fa-users" aria-hidden="true"></i>
-                <p>6 Guests</p>
-              </div>
-
-              <div className="room-feature">
-                <i className="fa fa-cog fa-fw fa-bed" aria-hidden="true"></i>
-                <p>2 Beds</p>
-              </div>
-
-              <div className="room-feature">
-                <i className="fa fa-cog fa-fw fa-bath" aria-hidden="true"></i>
-                <p>2 Baths</p>
-              </div>
-
-              <div className="room-feature">
-                <i
-                  className="fa fa-cog fa-fw fa-cutlery"
-                  aria-hidden="true"
-                ></i>
-                <p>Kitchen</p>
-              </div>
-            </div>
+            <p>{room.description}</p>
+            <RoomFeatures room={room} />
           </div>
 
           <div className="col-12 col-md-6 col-lg-4">
             <div className="booking-card shadow-lg p-4">
               <p className="price-per-night">
-                <b>$28</b> / night
+                <b>${room.pricePerNight}</b> / night
               </p>
 
               <button className="btn btn-block py-3 booking-btn">Pay</button>
