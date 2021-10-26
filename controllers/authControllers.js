@@ -13,7 +13,7 @@ cloudinary.config({
 
 // Register user => (GET) /api/auth/register
 export const registerUser = catchAsyncError(async (req, res) => {
-  const result = await cloudinary.v2.uploader.upload(req.body.avator, {
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
     folder: "bookit/avatars",
     width: "150",
     crop: "scale",
@@ -33,5 +33,15 @@ export const registerUser = catchAsyncError(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Account Registered Successfully",
+  });
+});
+
+// Current user profile => (GET) /api/me
+export const currentUserProfile = catchAsyncError(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    message: user,
   });
 });
