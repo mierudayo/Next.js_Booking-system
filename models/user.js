@@ -20,7 +20,7 @@ const userSchema = new Schema({
     minlength: [6, "Your password must be longer than 6 characters"],
     select: false,
   },
-  avator: {
+  avatar: {
     public_id: {
       type: String,
       required: true,

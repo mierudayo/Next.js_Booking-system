@@ -24,7 +24,7 @@ export const registerUser = catchAsyncError(async (req, res) => {
     name,
     email,
     password,
-    avator: {
+    avatar: {
       public_id: result.public_id,
       url: result.secure_url,
     },
@@ -43,5 +43,40 @@ export const currentUserProfile = catchAsyncError(async (req, res) => {
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+// Update user profile => (PUT) /api/me/update
+export const updateProfile = catchAsyncError(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name;
+    user.email = req.body.email;
+
+    if (req.body.password) user.password = req.body.password;
+  }
+
+  if (req.body.avatar !== "") {
+    const image_id = user.avatar.public_id;
+    // Delete user previous image/avatar
+    await cloudinary.v2.uploader.destroy(image_id);
+
+    const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "bookit/avatars",
+      width: "150",
+      crop: "scale",
+    });
+
+    user.avatar = {
+      public_id: result.public_id,
+      url: result.secure_url,
+    };
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
   });
 });
