@@ -28,7 +28,7 @@ export const Header = () => {
             <Link href="/">
               <img
                 style={{ cursor: "pointer" }}
-                src="../images/bookit_logo.png"
+                src="/images/bookit_logo.png"
                 alt="BookIT"
               />
             </Link>
