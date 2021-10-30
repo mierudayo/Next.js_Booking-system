@@ -8,7 +8,7 @@ import { loadUser } from "../../redux/actions/userActions";
 export const Header = () => {
   const dispatch = useDispatch();
 
-  const { user, loading } = useSelector((state) => state.auth);
+  const { loading, user } = useSelector((state) => state.loadedUser);
 
   useEffect(() => {
     if (!user) {

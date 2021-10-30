@@ -11,8 +11,6 @@ export const ForgotPassword = () => {
     (state) => state.forgotPassword
   );
 
-  console.log(message);
-
   const [email, setEmail] = useState("");
 
   useEffect(() => {
