@@ -5,7 +5,6 @@ import crypto from "crypto";
 import User from "../models/user";
 import ErrorHandler from "../utils/errorHandler";
 import catchAsyncError from "../middlewares/catchAsyncError";
-import APIFeatures from "../utils/apiFeatures";
 import { sendEmail } from "../utils/sendEmail";
 
 // SetUp cloudinary config
