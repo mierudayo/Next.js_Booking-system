@@ -1,4 +1,5 @@
-import { models, Schema } from "mongoose";
+import { models, model, Schema } from "mongoose";
+import timeZone from "mongoose-timezone";
 
 const bookingSchma = new Schema({
   room: {
@@ -47,4 +48,6 @@ const bookingSchma = new Schema({
   },
 });
 
-export default models.Booking || models("Booking", bookingSchma);
+bookingSchma.plugin(timeZone);
+
+export default models.Booking || model("Booking", bookingSchma);

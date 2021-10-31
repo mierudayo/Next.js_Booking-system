@@ -6,33 +6,51 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Image from "next/image";
 import axios from "axios";
-import DatePicker from "react-date-picker/dist/entry.nostyle";
-import "react-date-picker/dist/DatePicker.css";
-import "react-calendar/dist/Calendar.css";
+import moment from "moment";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+import { DateRangePicker } from "react-dates";
 
 import { clearErrors } from "../../redux/actions/roomActions";
 import { RoomFeatures } from "./RoomFeatures";
-import { checkBooking } from "../../redux/actions/bookingActions";
+import {
+  checkBooking,
+  getBookedDates,
+} from "../../redux/actions/bookingActions";
 import { CHECK_BOOKING_RESET } from "../../redux/constants/bookingConstants";
 
 export const RoomDetails = () => {
-  const [checkInDate, setCheckInDate] = useState();
-  const [checkOutDate, setCheckOutDate] = useState();
+  const [checkInDate, setCheckInDate] = useState(moment());
+  const [checkOutDate, setCheckOutDate] = useState(moment().add(3, "d"));
+  const [focusedInput, setFocusedInput] = useState(null);
   const [daysOfStay, setDaysOfStay] = useState();
 
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const { dates } = useSelector((state) => state.bookedDates);
   const { user } = useSelector((state) => state.loadedUser);
   const { room, error } = useSelector((state) => state.roomDetails);
   const { available, loading: bookingLoading } = useSelector(
     (state) => state.checkBooking
   );
 
-  const onChange = (dates) => {
-    const [checkInDate, checkOutDate] = dates;
-    setCheckInDate(checkInDate);
-    setCheckOutDate(checkOutDate);
+  const excludedDates = [];
+  if (dates) {
+    dates.forEach((date) => {
+      excludedDates.push(date);
+    });
+  }
+
+  const isDayBlocked = (day) => {
+    return excludedDates.includes(day);
+  };
+
+  const onChange = ({ startDate, endDate }) => {
+    setCheckInDate(startDate);
+    if (endDate) {
+      setCheckOutDate(endDate);
+    }
 
     if (checkInDate && checkOutDate) {
       const days = Math.floor(
@@ -45,6 +63,12 @@ export const RoomDetails = () => {
       );
     }
   };
+
+  const onFocusChange = (focusedInput) => {
+    setFocusedInput(focusedInput);
+  };
+
+  const { id } = router.query;
 
   const newBookingHandler = async () => {
     const bookingData = {
@@ -66,17 +90,20 @@ export const RoomDetails = () => {
         },
       };
       const { data } = await axios.post("/api/bookings", bookingData, config);
+      console.log(data);
     } catch (error) {
       console.log(error.response);
     }
   };
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearErrors());
-    }
-  }, []);
+    dispatch(getBookedDates(id));
+    toast.error(error);
+    dispatch(clearErrors());
+    return () => {
+      dispatch({ type: CHECK_BOOKING_RESET });
+    };
+  }, [dispatch, id]);
 
   return (
     <>
@@ -129,15 +156,14 @@ export const RoomDetails = () => {
 
               <p className="mt-5 mb-3">Pick Check In&Out Date</p>
 
-              <DatePicker
-                className="w-100"
-                selected={checkInDate}
-                onChange={onChange}
+              <DateRangePicker
                 startDate={checkInDate}
                 endDate={checkOutDate}
-                minDate={new Date()}
-                selectsRange
-                inline
+                minDate={new moment()}
+                isOutsideRange={isDayBlocked}
+                focusedInput={focusedInput}
+                onFocusChange={onFocusChange}
+                onDatesChange={onChange}
               />
 
               {available === true && (

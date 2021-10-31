@@ -23,6 +23,7 @@ export const newBooking = catchAsyncError(async (req, res) => {
     daysOfStay,
     amountPaid,
     paymentInfo,
+    paidAt: Date.now(),
   });
 
   res.status(200).json({
@@ -44,7 +45,7 @@ export const checkRoomBookingAvailability = catchAsyncError(
       $and: [
         {
           checkInDate: {
-            $lte: checkOutDate,
+            $lte: checkInDate,
           },
         },
         {
@@ -70,3 +71,35 @@ export const checkRoomBookingAvailability = catchAsyncError(
     });
   }
 );
+
+// Check booked dates => (GET) /api/bookings/check_booked_dates
+export const checkBookedDates = catchAsyncError(async (req, res) => {
+  let { roomId } = req.query;
+
+  const bookings = await Booking.find({ room: roomId });
+
+  let bookedDates = [];
+
+  const timeDifference = moment().utcOffset() / 60;
+
+  bookings.forEach((booking) => {
+    const checkInDate = moment(booking.checkInDate).add(
+      timeDifference,
+      "hours"
+    );
+    const checkOutDate = moment(booking.checkOutDate).add(
+      timeDifference,
+      "hours"
+    );
+
+    const range = moment.range(moment(checkInDate), moment(checkOutDate));
+
+    const dates = Array.from(range.by("day"));
+    bookedDates = bookedDates.concat(dates);
+  });
+
+  res.status(200).json({
+    success: true,
+    isAvailable,
+  });
+});
