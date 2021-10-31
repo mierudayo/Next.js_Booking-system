@@ -12,6 +12,8 @@ import "react-calendar/dist/Calendar.css";
 
 import { clearErrors } from "../../redux/actions/roomActions";
 import { RoomFeatures } from "./RoomFeatures";
+import { checkBooking } from "../../redux/actions/bookingActions";
+import { CHECK_BOOKING_RESET } from "../../redux/constants/bookingConstants";
 
 export const RoomDetails = () => {
   const [checkInDate, setCheckInDate] = useState();
@@ -21,7 +23,11 @@ export const RoomDetails = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const { user } = useSelector((state) => state.loadedUser);
   const { room, error } = useSelector((state) => state.roomDetails);
+  const { available, loading: bookingLoading } = useSelector(
+    (state) => state.checkBooking
+  );
 
   const onChange = (dates) => {
     const [checkInDate, checkOutDate] = dates;
@@ -33,6 +39,10 @@ export const RoomDetails = () => {
         (new Date(checkOutDate) - new Date(checkInDate)) / 86400000 + 1
       );
       setDaysOfStay(days);
+
+      dispatch(
+        checkBooking(id, checkInDate.toISOString(), checkOutDate.toISOString())
+      );
     }
   };
 
@@ -129,6 +139,33 @@ export const RoomDetails = () => {
                 selectsRange
                 inline
               />
+
+              {available === true && (
+                <div className="alert alert-success my-3 font-weight-bold">
+                  Room is available. Book now
+                </div>
+              )}
+              {available === false && (
+                <div className="alert alert-danger my-3 font-weight-bold">
+                  Room not available. Try different dates
+                </div>
+              )}
+
+              {available && !user && (
+                <div className="alert alert-danger my-3 font-weight-bold">
+                  Login to book room.
+                </div>
+              )}
+
+              {available && user && (
+                <button
+                  className="btn btn-block py-3 booking-btn"
+                  onClick={() => bookRoom(room._id, room.pricePerNight)}
+                  disabled={bookingLoading || paymentLoading ? true : false}
+                >
+                  Pay - ${daysOfStay * room.pricePerNight}
+                </button>
+              )}
 
               <button
                 className="btn btn-block py-3 booking-btn"
