@@ -26,7 +26,7 @@ export const MyBookings = () => {
         },
         {
           label: "Check In",
-          field: "checkin",
+          field: "checkIn",
           sort: "asc",
         },
         {
