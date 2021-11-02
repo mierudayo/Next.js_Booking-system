@@ -9,6 +9,8 @@ import {
   CHECK_BOOKING_FAIL,
   CHECK_BOOKING_REQUEST,
   CHECK_BOOKING_SUCCESS,
+  BOOKING_DETAILS_SUCCESS,
+  BOOKING_DETAILS_FAIL,
 } from "../constants/bookingConstants";
 
 // Check bookings
@@ -72,6 +74,31 @@ export const myBookings = (authCookie, req) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: MY_BOOKINGS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Display booking details
+export const getBookingDetails = (authCookie, req, id) => async (dispatch) => {
+  try {
+    const { origin } = absoluteUrl(req);
+
+    const config = {
+      headers: {
+        cookie: authCookie,
+      },
+    };
+
+    const { data } = await axios.get(`${origin}/api/bookings/${id}`, config);
+
+    dispatch({
+      type: BOOKING_DETAILS_SUCCESS,
+      payload: data.booking,
+    });
+  } catch (error) {
+    dispatch({
+      type: BOOKING_DETAILS_FAIL,
       payload: error.response.data.message,
     });
   }

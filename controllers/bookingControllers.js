@@ -124,3 +124,21 @@ export const myBookings = catchAsyncError(async (req, res) => {
     bookings,
   });
 });
+
+// Get booking details => (GET) /api/bookings/:id
+export const getBookingDetails = catchAsyncError(async (req, res) => {
+  const booking = await Booking.findById(req.query.id)
+    .populate({
+      path: "room",
+      select: "name pricePerNight images",
+    })
+    .populate({
+      path: "user",
+      select: "name email",
+    });
+
+  res.status(200).json({
+    success: true,
+    booking,
+  });
+});
