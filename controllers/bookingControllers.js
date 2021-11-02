@@ -1,8 +1,11 @@
-import absoluteUrl from "next-absolute-url";
+import Moment from "moment";
+import { extendMoment } from "moment-range";
 
 import Booking from "../models/booking";
 import ErrorHandler from "../utils/errorHandler";
 import catchAsyncError from "../middlewares/catchAsyncError";
+
+const moment = extendMoment(Moment);
 
 // Create new booking => (POST) /api/bookings
 export const newBooking = catchAsyncError(async (req, res) => {
@@ -45,12 +48,12 @@ export const checkRoomBookingAvailability = catchAsyncError(
       $and: [
         {
           checkInDate: {
-            $lte: checkInDate,
+            $lte: checkOutDate,
           },
         },
         {
           checkOutDate: {
-            $gte: checkOutDate,
+            $gte: checkInDate,
           },
         },
       ],
@@ -100,7 +103,7 @@ export const checkBookedDates = catchAsyncError(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    isAvailable,
+    bookedDates,
   });
 });
 

@@ -20,7 +20,7 @@ import {
 import { CHECK_BOOKING_RESET } from "../../redux/constants/bookingConstants";
 
 export const RoomDetails = () => {
-  const [checkInDate, setCheckInDate] = useState(moment());
+  const [checkInDate, setCheckInDate] = useState();
   const [checkOutDate, setCheckOutDate] = useState(moment().add(3, "d"));
   const [focusedInput, setFocusedInput] = useState(null);
   const [daysOfStay, setDaysOfStay] = useState();
@@ -38,15 +38,15 @@ export const RoomDetails = () => {
   const excludedDates = [];
   if (dates) {
     dates.forEach((date) => {
-      excludedDates.push(date);
+      excludedDates.push(moment(date).format("YYYY-MM-DD"));
     });
   }
 
   const isDayBlocked = (day) => {
-    return excludedDates.includes(day);
+    return excludedDates.some((date) => day.isSame(date), "day");
   };
 
-  const onChange = ({ startDate, endDate }) => {
+  const onDatesChange = ({ startDate, endDate }) => {
     setCheckInDate(startDate);
     if (endDate) {
       setCheckOutDate(endDate);
@@ -90,7 +90,6 @@ export const RoomDetails = () => {
         },
       };
       const { data } = await axios.post("/api/bookings", bookingData, config);
-      console.log(data);
     } catch (error) {
       console.log(error.response);
     }
@@ -158,12 +157,14 @@ export const RoomDetails = () => {
 
               <DateRangePicker
                 startDate={checkInDate}
+                startDateId="checkInDate"
                 endDate={checkOutDate}
+                endDateId="checkOutDate"
                 minDate={new moment()}
-                isOutsideRange={isDayBlocked}
+                isDayBlocked={isDayBlocked}
                 focusedInput={focusedInput}
                 onFocusChange={onFocusChange}
-                onDatesChange={onChange}
+                onDatesChange={onDatesChange}
               />
 
               {available === true && (
@@ -183,19 +184,19 @@ export const RoomDetails = () => {
                 </div>
               )}
 
-              {available && user && (
+              {/* {available && user && (
                 <button
                   className="btn btn-block py-3 booking-btn"
                   onClick={() => bookRoom(room._id, room.pricePerNight)}
-                  disabled={bookingLoading || paymentLoading ? true : false}
                 >
                   Pay - ${daysOfStay * room.pricePerNight}
                 </button>
-              )}
+              )} */}
 
               <button
                 className="btn btn-block py-3 booking-btn"
                 onClick={newBookingHandler}
+                disabled={!available}
               >
                 Pay
               </button>

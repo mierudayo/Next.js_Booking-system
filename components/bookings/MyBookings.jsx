@@ -22,7 +22,6 @@ export const MyBookings = () => {
         {
           label: "Booking ID",
           field: "id",
-          sort: "asc",
         },
         {
           label: "Check In",
@@ -32,17 +31,14 @@ export const MyBookings = () => {
         {
           label: "Check Out",
           field: "checkOut",
-          sort: "asc",
         },
         {
           label: "Amount Paid",
           field: "amount",
-          sort: "asc",
         },
         {
           label: "Actions",
           field: "actions",
-          sort: "asc",
         },
       ],
       rows: [],

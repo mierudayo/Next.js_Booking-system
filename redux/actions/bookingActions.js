@@ -17,7 +17,7 @@ export const checkBooking =
     try {
       dispatch({ type: CHECK_BOOKING_REQUEST });
 
-      let link = `/api/booking/check?roomId=${roomId}&&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`;
+      let link = `/api/bookings/check?roomId=${roomId}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}`;
 
       const { data } = await axios.get(link);
 
@@ -37,7 +37,7 @@ export const checkBooking =
 export const getBookedDates = (id) => async (dispatch) => {
   try {
     const { data } = await axios.get(
-      `api/bookings/check_booked_dates?roomId=${id}`
+      `/api/bookings/check_booked_dates?roomId=${id}`
     );
 
     dispatch({
@@ -64,7 +64,6 @@ export const myBookings = (authCookie, req) => async (dispatch) => {
     };
 
     const { data } = await axios.get(`${origin}/api/bookings/me`, config);
-    console.log(data);
 
     dispatch({
       type: MY_BOOKINGS_SUCCESS,
