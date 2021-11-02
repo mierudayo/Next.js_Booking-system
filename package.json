@@ -13,6 +13,7 @@
     "bcryptjs": "^2.4.3",
     "chalk": "^4.1.2",
     "cloudinary": "^1.27.1",
+    "easyinvoice": "^1.0.148",
     "mdbreact": "^5.1.0",
     "moment": "^2.29.1",
     "moment-range": "^4.0.2",

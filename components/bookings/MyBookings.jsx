@@ -3,6 +3,7 @@ import Link from "next/dist/client/link";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
+import { createInvoice, download } from "easyinvoice";
 
 import { clearErrors } from "../../redux/actions/bookingActions";
 export const MyBookings = () => {
@@ -58,7 +59,10 @@ export const MyBookings = () => {
                   <i className="fa fa-eye"></i>
                 </a>
               </Link>
-              <button className="btn btn-success mx-2">
+              <button
+                className="btn btn-success mx-2"
+                onClick={() => downloadInvoice(booking)}
+              >
                 <i className="fa fa-download"></i>
               </button>
             </>
@@ -66,6 +70,50 @@ export const MyBookings = () => {
         });
       });
     return data;
+  };
+
+  const downloadInvoice = async (booking) => {
+    const data = {
+      documentTitle: "Booking INVOICE",
+      currency: "USD",
+      taxNotation: "vat",
+      marginTop: 25,
+      marginRight: 25,
+      marginLeft: 25,
+      marginBottom: 25,
+      logo: "https://res.cloudinary.com/bookit/image/upload/v1617904918/bookit/bookit_logo_cbgjzv.png",
+      sender: {
+        company: "Book IT",
+        address: "Oshiue 1-1-2 Sumida-ku",
+        zip: "1310045",
+        city: "Tokyo",
+        country: "Japan",
+      },
+      client: {
+        company: `${booking.user.name}`,
+        address: `${booking.user.email}`,
+        zip: "",
+        city: `Check In: ${new Date(booking.checkInDate).toLocaleString("ja")}`,
+        country: `Check In: ${new Date(booking.checkOutDate).toLocaleString(
+          "ja"
+        )}`,
+      },
+      invoiceNumber: `${booking._id}`,
+      invoiceDate: `${new Date(Date.now()).toLocaleString("ja")}`,
+      products: [
+        {
+          quantity: `${booking.daysOfStay}`,
+          description: `${booking.room.name}`,
+          tax: 0,
+          price: booking.room.pricePerNight,
+        },
+      ],
+      bottomNotice:
+        "This is auto generated Invoice of your booking on Book IT.",
+    };
+
+    const result = await createInvoice(data);
+    download(`invoice_${booking._id}.pdf`, result.pdf);
   };
 
   return (
