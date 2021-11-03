@@ -57,7 +57,7 @@ export const RoomDetails = () => {
     }
 
     if (checkInDate && checkOutDate && checkOutDate.isAfter(checkInDate)) {
-      const days = checkOutDate.diff(checkInDate, "days");
+      const days = checkInDate.diff(checkOutDate, "days");
 
       setDaysOfStay(days);
 
