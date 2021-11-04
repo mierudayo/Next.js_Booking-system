@@ -4,12 +4,12 @@ import { useRouter } from "next/dist/client/router";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Loader } from "../layouts/Loader";
-import { newReview, clearErrors } from "../../redux/actions/roomActions";
 import {
-  NEW_REVIEW_RESET,
-  NEW_REVIEW_SUCCESS,
-} from "../../redux/constants/roomConstants";
-import { startSession } from "mongoose";
+  newReview,
+  clearErrors,
+  checkReviewAvailability,
+} from "../../redux/actions/roomActions";
+import { NEW_REVIEW_RESET } from "../../redux/constants/roomConstants";
 
 export const NewReview = () => {
   const [rating, setRating] = useState(0);
@@ -19,9 +19,14 @@ export const NewReview = () => {
   const router = useRouter();
 
   const { error, success } = useSelector((state) => state.newReview);
+  const { reviewAvailable } = useSelector((state) => state.checkReview);
   const { id } = router.query;
 
   useEffect(() => {
+    if (id !== undefined) {
+      dispatch(checkReviewAvailability(id));
+    }
+
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
@@ -40,13 +45,13 @@ export const NewReview = () => {
     dispatch(newReview(reviewData));
   };
 
-  function setUserRatings(e) {
+  function setUserRatings() {
     const stars = document.querySelectorAll(".star");
 
     stars.forEach((star, index) => {
       star.starValue = index + 1;
 
-      ["cilck", "mouseover", "mouseout"].forEach((e) => {
+      ["click", "mouseover", "mouseout"].forEach(function (e) {
         star.addEventListener(e, showRatings);
       });
     });
@@ -56,6 +61,7 @@ export const NewReview = () => {
         if (e.type === "click") {
           if (index < this.starValue) {
             star.classList.add("red");
+
             setRating(this.starValue);
           } else {
             star.classList.remove("red");
@@ -75,25 +81,27 @@ export const NewReview = () => {
         }
       });
     }
+    console.log(rating);
   }
 
   return (
     <>
-      <button
-        id="review_btn"
-        type="button"
-        className="btn btn-primary mt-4 mb-5"
-        data-toggle="modal"
-        data-target="#ratingModal"
-        onClick={setUserRatings}
-      >
-        Submit Your Review
-      </button>
-
+      {reviewAvailable && (
+        <button
+          id="review_btn"
+          type="button"
+          className="btn btn-primary mt-4 mb-5"
+          data-toggle="modal"
+          data-target="#ratingModal"
+          onClick={setUserRatings}
+        >
+          Submit Your Review
+        </button>
+      )}
       <div
         className="modal fade"
         id="ratingModal"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="ratingModalLabel"
         aria-hidden="true"
@@ -139,9 +147,7 @@ export const NewReview = () => {
                 className="form-control mt-3"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-              >
-                {" "}
-              </textarea>
+              ></textarea>
 
               <button
                 className="btn my-3 float-right review-btn px-4 text-white"
