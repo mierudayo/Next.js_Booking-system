@@ -132,3 +132,13 @@ export const checkReviewAvailability = catchAsyncError(async (req, res) => {
     isReviewAvailable,
   });
 });
+
+// Get all rooms - Admin   =>  (GET) /api/admin/rooms
+export const allAdminRooms = catchAsyncError(async (req, res) => {
+  const rooms = await Room.find();
+
+  res.status(200).json({
+    success: true,
+    rooms,
+  });
+});

@@ -10,12 +10,19 @@ import {
   REVIEW_AVAILABILITY_REQUEST,
   REVIEW_AVAILABILITY_SUCCESS,
   REVIEW_AVAILABILITY_FAIL,
+  ADMIN_ROOM_REQUEST,
+  ADMIN_ROOM_SUCCESS,
+  ADMIN_ROOM_FAIL,
   CLEAR_ERRORS,
 } from "../constants/roomConstants";
 
 // All rooms Reducer
 export const allRoomsReducer = (state = { rooms: [] }, action) => {
   switch (action.type) {
+    case ADMIN_ROOM_REQUEST:
+      return {
+        loading: success,
+      };
     case ALL_ROOMS_SUCCESS:
       return {
         roomsCount: action.payload.roomsCount,
@@ -23,7 +30,13 @@ export const allRoomsReducer = (state = { rooms: [] }, action) => {
         filteredRoomsCount: action.payload.filteredRoomsCount,
         rooms: action.payload.rooms,
       };
+    case ADMIN_ROOM_SUCCESS:
+      return {
+        loading: false,
+        rooms: action.payload,
+      };
     case ALL_ROOMS_FAIL:
+    case ADMIN_ROOM_FAIL:
       return {
         error: action.payload,
       };
