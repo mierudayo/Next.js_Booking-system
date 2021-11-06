@@ -16,6 +16,9 @@ import {
   ADMIN_ROOM_REQUEST,
   ADMIN_ROOM_SUCCESS,
   ADMIN_ROOM_FAIL,
+  NEW_ROOM_REQUEST,
+  NEW_ROOM_SUCCESS,
+  NEW_ROOM_FAIL,
 } from "../constants/roomConstants";
 
 // Get all rooms
@@ -42,6 +45,31 @@ export const getRooms =
       });
     }
   };
+
+// new Review
+export const newRoom = (roomData) => async (dispatch) => {
+  try {
+    dispatch({ type: NEW_ROOM_REQUEST });
+
+    const config = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(`/api/rooms`, reviewData, config);
+
+    dispatch({
+      type: NEW_ROOM_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: NEW_ROOM_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
 
 // new Review
 export const newReview = (reviewData) => async (dispatch) => {

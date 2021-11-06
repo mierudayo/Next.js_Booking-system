@@ -6,7 +6,8 @@ import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
 
 import { Loader } from "../layouts/Loader";
-import { getAdminRooms } from "../../redux/actions/roomActions";
+import { getAdminRooms } from '../../redux/actions/roomActions'
+
 export const AllRooms = () => {
   const dispatch = useDispatch();
   const router = useRouter();

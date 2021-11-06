@@ -1,3 +1,5 @@
+import cloudinary from "cloudinary";
+
 import Room from "../models/room";
 import Booking from "../models/booking";
 import ErrorHandler from "../utils/errorHandler";
@@ -26,8 +28,26 @@ export const getAllRooms = catchAsyncError(async (req, res) => {
   });
 });
 
-// Create New Room => (POST) /api/rooms/
+// Create New Room => (POST) /api/rooms
 export const createNewRoom = catchAsyncError(async (req, res) => {
+  const images = req.body.images;
+
+  let imagesLinks = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "bookit/rooms",
+    });
+
+    imagesLinks.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+
+  req.body.image = imagesLinks;
+  req.body.user = req.user._id;
+
   const room = await Room.create(req.body);
   res.status(200).json({
     success: true,
