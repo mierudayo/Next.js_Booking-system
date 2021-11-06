@@ -18,7 +18,11 @@ import {
   NEW_ROOM_FAIL,
   NEW_ROOM_RESET,
   CLEAR_ERRORS,
+  UPDATE_ROOM_REQUEST,
+  UPDATE_ROOM_SUCCESS,
+  UPDATE_ROOM_FAIL,
 } from "../constants/roomConstants";
+import { UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 // All rooms Reducer
 export const allRoomsReducer = (state = { rooms: [] }, action) => {
@@ -124,6 +128,38 @@ export const newRoomReducer = (state = { room: {} }, action) => {
         success: false,
       };
     case NEW_ROOM_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+// Room Reducer
+export const roomReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_ROOM_REQUEST:
+      return {
+        loading: true,
+      };
+    case UPDATE_ROOM_SUCCESS:
+      return {
+        loading: false,
+        isUpdated: action.payload,
+      };
+    case UPDATE_PROFILE_RESET:
+      return {
+        loading: false,
+        isUpdated: false,
+      };
+    case UPDATE_ROOM_FAIL:
       return {
         loading: false,
         error: action.payload,

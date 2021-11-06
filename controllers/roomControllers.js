@@ -73,6 +73,26 @@ export const updateRoom = catchAsyncError(async (req, res) => {
   if (!room) {
     return next(new ErrorHandler("Room not found with this ID", 400));
   }
+
+  if (req.body.images) {
+    for (let i = 0; i < room.images.length; i++) {
+      await cloudinary.v2.uploader.destroy(room.images[i].public_id);
+    }
+
+    let imagesLinks = [];
+    const images = req.body.images;
+
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder: "bookit/rooms",
+      });
+      imagesLinks.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
+  }
+
   room = await Room.findByIdAndUpdate(req.query.id, req.body, {
     new: true,
     runValidators: true,

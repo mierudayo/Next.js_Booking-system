@@ -12,6 +12,7 @@ import {
   newReviewReducer,
   newRoomReducer,
   roomDetailsReducer,
+  roomReducer,
 } from "./roomReducers";
 import {
   authReducer,
@@ -24,6 +25,7 @@ export const reducers = combineReducers({
   allRooms: allRoomsReducer,
   newRoom: newRoomReducer,
   roomDetails: roomDetailsReducer,
+  room: roomReducer,
   auth: authReducer,
   loadedUser: loadedUserReducer,
   user: userReducer,
