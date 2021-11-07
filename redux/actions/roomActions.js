@@ -22,6 +22,9 @@ import {
   UPDATE_ROOM_REQUEST,
   UPDATE_ROOM_SUCCESS,
   UPDATE_ROOM_FAIL,
+  DELETE_ROOM_REQUEST,
+  DELETE_ROOM_SUCCESS,
+  DELETE_ROOM_FAIL,
 } from "../constants/roomConstants";
 
 // Get all rooms
@@ -94,6 +97,25 @@ export const updateRoom = (id, roomData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: UPDATE_ROOM_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// delete Review
+export const deleteRoom = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_ROOM_REQUEST });
+
+    const { data } = await axios.delete(`/api/rooms/${id}`);
+
+    dispatch({
+      type: DELETE_ROOM_SUCCESS,
+      payload: data.success,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_ROOM_FAIL,
       payload: error.response.data.message,
     });
   }
