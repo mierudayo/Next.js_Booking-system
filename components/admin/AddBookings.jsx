@@ -1,17 +1,26 @@
 import React, { useEffect } from "react";
 import Link from "next/dist/client/link";
+import { useRouter } from "next/dist/client/router";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
 import { createInvoice, download } from "easyinvoice";
 
-import { clearErrors } from "../../redux/actions/bookingActions";
+import { Loader } from "../layouts/Loader";
+import {
+  clearErrors,
+  getAdminBookings,
+} from "../../redux/actions/bookingActions";
 
-export const MyBookings = () => {
+export const AllBookings = () => {
   const dispatch = useDispatch();
-  const { bookings, error } = useSelector((state) => state.bookings);
+  const router = useRouter();
+
+  const { bookings, error, loading } = useSelector((state) => state.bookings);
 
   useEffect(() => {
+    dispatch(getAdminBookings());
+
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
@@ -66,6 +75,12 @@ export const MyBookings = () => {
               >
                 <i className="fa fa-download"></i>
               </button>
+              <button
+                className="btn btn-danger mx-2"
+                onClick={() => deleteBookingHandler(booking._id)}
+              >
+                <i className="fa fa-trash"></i>
+              </button>
             </>
           ),
         });
@@ -119,15 +134,21 @@ export const MyBookings = () => {
 
   return (
     <div className="container container-fluid">
-      <h1 className="my-5">My Bookings</h1>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <h1 className="my-5">{`${bookings && bookings.length} Bookings`}</h1>
 
-      <MDBDataTable
-        data={setBookings()}
-        className="px-3"
-        bordered
-        striped
-        hover
-      />
+          <MDBDataTable
+            data={setBookings()}
+            className="px-3"
+            bordered
+            striped
+            hover
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -10,7 +10,10 @@ import {
   BOOKING_DETAILS_SUCCESS,
   BOOKING_DETAILS_FAIL,
   CLEAR_ERRORS,
+  ADMIN_BOOKINGS_SUCCESS,
+  ADMIN_BOOKINGS_FAIL,
 } from "../constants/bookingConstants";
+import { ADMIN_ROOM_REQUEST } from "../constants/roomConstants";
 
 // Check Booking Reducer
 export const checkBookingReducer = (state = { available: null }, action) => {
@@ -70,12 +73,18 @@ export const bookedDatesReducer = (state = { dates: [] }, action) => {
 // Get all bookings of user
 export const bookingsReducer = (state = { bookings: [] }, action) => {
   switch (action.type) {
+    case ADMIN_ROOM_REQUEST:
+      return {
+        loading: true,
+      };
     case MY_BOOKINGS_SUCCESS:
+    case ADMIN_BOOKINGS_SUCCESS:
       return {
         loading: false,
         bookings: action.payload,
       };
     case MY_BOOKINGS_FAIL:
+    case ADMIN_BOOKINGS_FAIL:
       return {
         loading: false,
         error: action.payload,

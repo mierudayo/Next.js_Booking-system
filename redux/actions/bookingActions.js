@@ -11,6 +11,9 @@ import {
   CHECK_BOOKING_SUCCESS,
   BOOKING_DETAILS_SUCCESS,
   BOOKING_DETAILS_FAIL,
+  ADMIN_BOOKINGS_REQUEST,
+  ADMIN_BOOKINGS_SUCCESS,
+  ADMIN_BOOKINGS_FAIL,
 } from "../constants/bookingConstants";
 
 // Check bookings
@@ -74,6 +77,25 @@ export const myBookings = (authCookie, req) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: MY_BOOKINGS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Display all bookings for admin
+export const getAdminBookings = () => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_BOOKINGS_REQUEST });
+
+    const { data } = await axios.get(`${origin}/api/admin/bookings`);
+
+    dispatch({
+      type: ADMIN_BOOKINGS_SUCCESS,
+      payload: data.bookings,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_BOOKINGS_FAIL,
       payload: error.response.data.message,
     });
   }
