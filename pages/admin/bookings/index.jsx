@@ -2,7 +2,7 @@ import React from "react";
 import { getSession } from "next-auth/client";
 
 import { Layout } from "../../../components/layouts/Layout";
-import { AllBookings } from "../../../components/admin/AddBookings";
+import { AllBookings } from "../../../components/admin/AllBookings";
 
 export default function AllBookingsPage() {
   return (

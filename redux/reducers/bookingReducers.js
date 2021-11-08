@@ -12,8 +12,14 @@ import {
   CLEAR_ERRORS,
   ADMIN_BOOKINGS_SUCCESS,
   ADMIN_BOOKINGS_FAIL,
+  DELETE_BOOKING_SUCCESS,
+  DELETE_BOOKING_FAIL,
+  DELETE_BOOKING_RESET,
 } from "../constants/bookingConstants";
-import { ADMIN_ROOM_REQUEST } from "../constants/roomConstants";
+import {
+  ADMIN_ROOM_REQUEST,
+  DELETE_ROOM_REQUEST,
+} from "../constants/roomConstants";
 
 // Check Booking Reducer
 export const checkBookingReducer = (state = { available: null }, action) => {
@@ -108,6 +114,38 @@ export const bookingDetailsReducer = (state = { booking: {} }, action) => {
         booking: action.payload,
       };
     case BOOKING_DETAILS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+// Delete Booking Reducer
+export const bookingReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_ROOM_REQUEST:
+      return {
+        loading: true,
+      };
+    case DELETE_BOOKING_SUCCESS:
+      return {
+        loading: false,
+        isDeleted: action.payload,
+      };
+    case DELETE_BOOKING_RESET:
+      return {
+        loading: false,
+        isDeleted: false,
+      };
+    case DELETE_BOOKING_FAIL:
       return {
         loading: false,
         error: action.payload,

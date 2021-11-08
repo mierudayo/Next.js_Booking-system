@@ -14,6 +14,9 @@ import {
   ADMIN_BOOKINGS_REQUEST,
   ADMIN_BOOKINGS_SUCCESS,
   ADMIN_BOOKINGS_FAIL,
+  DELETE_BOOKING_REQUEST,
+  DELETE_BOOKING_SUCCESS,
+  DELETE_BOOKING_FAIL,
 } from "../constants/bookingConstants";
 
 // Check bookings
@@ -121,6 +124,25 @@ export const getBookingDetails = (authCookie, req, id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: BOOKING_DETAILS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Delete booking
+export const deleteBooking = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_BOOKING_REQUEST });
+
+    const { data } = await axios.delete(`/api/admin/bookings/${id}`);
+
+    dispatch({
+      type: DELETE_BOOKING_SUCCESS,
+      payload: data.success,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_BOOKING_FAIL,
       payload: error.response.data.message,
     });
   }

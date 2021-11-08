@@ -9,14 +9,19 @@ import { createInvoice, download } from "easyinvoice";
 import { Loader } from "../layouts/Loader";
 import {
   clearErrors,
+  deleteBooking,
   getAdminBookings,
 } from "../../redux/actions/bookingActions";
+import { DELETE_BOOKING_RESET } from "../../redux/constants/bookingConstants";
 
 export const AllBookings = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const { bookings, error, loading } = useSelector((state) => state.bookings);
+  const { isDeleted, error: deleteError } = useSelector(
+    (state) => state.booking
+  );
 
   useEffect(() => {
     dispatch(getAdminBookings());
@@ -25,7 +30,17 @@ export const AllBookings = () => {
       toast.error(error);
       dispatch(clearErrors());
     }
-  }, [dispatch]);
+
+    if (deleteError) {
+      toast.error(deleteError);
+      dispatch(clearErrors());
+    }
+
+    if (isDeleted) {
+      router.push(`/admin/bookings`);
+      dispatch({ type: DELETE_BOOKING_RESET });
+    }
+  }, [dispatch, deleteError, isDeleted]);
 
   const setBookings = () => {
     const data = {
@@ -86,6 +101,10 @@ export const AllBookings = () => {
         });
       });
     return data;
+  };
+
+  const deleteBookingHandler = (id) => {
+    dispatch(deleteBooking(id));
   };
 
   const downloadInvoice = async (booking) => {
