@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Link from "next/dist/client/link";
 import Image from "next/dist/client/image";
 import { useSelector, useDispatch } from "react-redux";
-import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
 
 import { clearErrors } from "../../redux/actions/bookingActions";
