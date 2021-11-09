@@ -183,8 +183,6 @@ export const getUserDetails = catchAsyncError(async (req, res, next) => {
 
 // Update user details => (GET) /api/admin/users/:id
 export const updateUser = catchAsyncError(async (req, res) => {
-  const user = await User.findById(req.query.id);
-
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
