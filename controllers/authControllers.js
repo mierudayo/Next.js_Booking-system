@@ -166,3 +166,37 @@ export const allAdminUsers = catchAsyncError(async (req, res) => {
     users,
   });
 });
+
+// Get user details => (GET) /api/admin/users/:id
+export const getUserDetails = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.query.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found with this ID", 400));
+  }
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// Update user details => (GET) /api/admin/users/:id
+export const updateUser = catchAsyncError(async (req, res) => {
+  const user = await User.findById(req.query.id);
+
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
+
+  const user = await User.findByIdAndUpdate(req.query.id, newUserData, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+  });
+});

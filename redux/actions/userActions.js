@@ -20,6 +20,11 @@ import {
   ADMIN_USERS_REQUEST,
   ADMIN_USERS_SUCCESS,
   ADMIN_USERS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_FAIL,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAIL,
 } from "../constants/userConstants";
 
 // Register user
@@ -147,12 +152,6 @@ export const getAdminUsers = () => async (dispatch) => {
   try {
     dispatch({ type: ADMIN_USERS_REQUEST });
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
     const { data } = await axios.get(`/api/admin/users`);
 
     dispatch({
@@ -162,6 +161,54 @@ export const getAdminUsers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ADMIN_USERS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Display user details
+export const getUserDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_DETAILS_REQUEST });
+
+    const { data } = await axios.get(`/api/admin/users/${id}`);
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Update user details
+export const updateUser = (id, userData) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_USER_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/admin/users/${id}`,
+      userData,
+      config
+    );
+
+    dispatch({
+      type: UPDATE_USER_SUCCESS,
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_USER_FAIL,
       payload: error.response.data.message,
     });
   }

@@ -21,6 +21,7 @@ import {
   userReducer,
   forgotPasswordReducer,
   allUsersReducer,
+  userDetailsReducer,
 } from "./userReducers";
 
 export const reducers = combineReducers({
@@ -31,6 +32,7 @@ export const reducers = combineReducers({
   auth: authReducer,
   loadedUser: loadedUserReducer,
   allUsers: allUsersReducer,
+  userDetails: userDetailsReducer,
   user: userReducer,
   forgotPassword: forgotPasswordReducer,
   checkBooking: checkBookingReducer,
