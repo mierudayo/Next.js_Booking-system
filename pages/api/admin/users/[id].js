@@ -7,6 +7,7 @@ import {
   isAuthenticatedUser,
 } from "../../../../middlewares/auth";
 import {
+  deleteUser,
   getUserDetails,
   updateUser,
 } from "../../../../controllers/authControllers";
@@ -17,5 +18,6 @@ dbConnect();
 
 handler.use(isAuthenticatedUser, authorizeRoles("admin")).get(getUserDetails);
 handler.use(isAuthenticatedUser, authorizeRoles("admin")).put(updateUser);
+handler.use(isAuthenticatedUser, authorizeRoles("admin")).delete(deleteUser);
 
 export default handler;

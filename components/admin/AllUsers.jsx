@@ -6,15 +6,19 @@ import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
 
 import { Loader } from "../layouts/Loader";
-import { DELETE_ROOM_RESET } from "../../redux/constants/roomConstants";
-import { getAdminUsers, clearErrors } from "../../redux/actions/userActions";
+import {
+  getAdminUsers,
+  clearErrors,
+  deleteUser,
+} from "../../redux/actions/userActions";
+import { DELETE_USER_RESET } from "../../redux/constants/userConstants";
 
 export const AllUsers = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const { loading, error, users } = useSelector((state) => state.allUsers);
-  // const { error: deleteError, isDeleted } = useSelector((state) => state.user);
+  const { error: deleteError, isDeleted } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getAdminUsers());
@@ -24,16 +28,16 @@ export const AllUsers = () => {
       dispatch(clearErrors());
     }
 
-    // if (deleteError) {
-    //   toast.error(deleteError);
-    //   dispatch(clearErrors());
-    // }
+    if (deleteError) {
+      toast.error(deleteError);
+      dispatch(clearErrors());
+    }
 
-    // if (isDeleted) {
-    //   router.push(`/admin/rooms`);
-    //   dispatch({ type: DELETE_ROOM_RESET });
-    // }
-  }, [dispatch]);
+    if (isDeleted) {
+      router.push(`/admin/rooms`);
+      dispatch({ type: DELETE_USER_RESET });
+    }
+  }, [dispatch, error, isDeleted]);
 
   const setUsers = () => {
     const data = {
@@ -84,7 +88,7 @@ export const AllUsers = () => {
 
               <button
                 className="btn btn-danger mx-2"
-                onClick={}
+                onClick={() => deleteUserHandler(user._id)}
               >
                 <i className="fa fa-trash"></i>
               </button>
@@ -95,24 +99,26 @@ export const AllUsers = () => {
     return data;
   };
 
-  const deleteRoomHandler = (id) => {
-    dispatch(deleteRoom(id));
+  const deleteUserHandler = (id) => {
+    dispatch(deleteUser(id));
   };
 
   return (
-    <div className='container container-fluid'>
-      {loading ? <Loader /> :
+    <div className="container container-fluid">
+      {loading ? (
+        <Loader />
+      ) : (
         <>
-          <h1 className='my-5'>{`${users && users.length} Users`}</h1>
+          <h1 className="my-5">{`${users && users.length} Users`}</h1>
           <MDBDataTable
-              data={setUsers()}
-              className='px-3'
-              bordered
-              striped
-              hover
+            data={setUsers()}
+            className="px-3"
+            bordered
+            striped
+            hover
           />
         </>
-      }
+      )}
     </div>
   );
 };
