@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/dist/client/link";
-import { useRouter } from "next/dist/client/router";
 import { useSelector, useDispatch } from "react-redux";
 import { MDBDataTable } from "mdbreact";
 import { toast } from "react-toastify";
 
-import { Loader } from "../layouts/Loader";
-import { clearErrors, getRoomReviews } from "../../redux/actions/roomActions";
+import {
+  clearErrors,
+  deleteReview,
+  getRoomReviews,
+} from "../../redux/actions/roomActions";
+import { DELETE_REVIEW_RESET } from "../../redux/constants/roomConstants";
 
 export const RoomReviews = () => {
   const [roomId, setRoomId] = useState();
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const { loading, error, reviews } = useSelector((state) => state.roomReviews);
+  const { error: deleteError, isDeleted } = useSelector(
+    (state) => state.review
+  );
 
   useEffect(() => {
     if (error) {
@@ -25,7 +29,17 @@ export const RoomReviews = () => {
     if (roomId !== "") {
       dispatch(getRoomReviews(roomId));
     }
-  }, [dispatch, error, roomId]);
+
+    if (deleteError) {
+      toast.error(deleteError);
+      dispatch(clearErrors());
+    }
+
+    if (isDeleted) {
+      toast.success("Review is deleted");
+      dispatch({ type: DELETE_REVIEW_RESET });
+    }
+  }, [dispatch, error, roomId, deleteError, isDeleted]);
 
   const setReviews = () => {
     const data = {
@@ -78,6 +92,10 @@ export const RoomReviews = () => {
       });
 
     return data;
+  };
+
+  const deleteReviewHandler = (id) => {
+    dispatch(deleteReview(id, roomId));
   };
 
   return (

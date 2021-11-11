@@ -199,7 +199,7 @@ export const getAdminReviews = catchAsyncError(async (req, res) => {
 });
 
 // Delete room review - ADMIN   =>   /api/reviews
-export const deleteReview = catchAsyncErrors(async (req, res) => {
+export const deleteReview = catchAsyncError(async (req, res) => {
   const room = await Room.findById(req.query.roomId);
 
   const reviews = room.reviews.filter(
@@ -221,7 +221,6 @@ export const deleteReview = catchAsyncErrors(async (req, res) => {
     {
       new: true,
       runValidators: true,
-      useFindAndModify: false,
     }
   );
 
