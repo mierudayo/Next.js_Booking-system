@@ -25,6 +25,9 @@ import {
   DELETE_ROOM_REQUEST,
   DELETE_ROOM_SUCCESS,
   DELETE_ROOM_FAIL,
+  GET_REVIEWS_REQUEST,
+  GET_REVIEWS_SUCCESS,
+  GET_REVIEWS_FAIL,
 } from "../constants/roomConstants";
 
 // Get all rooms
@@ -208,6 +211,25 @@ export const getAdminRooms = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ADMIN_ROOM_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Get room reviews
+export const getRoomReviews = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_REVIEWS_REQUEST });
+
+    const { data } = await axios.get(`/api/reviews/?id=${id}`);
+
+    dispatch({
+      type: GET_REVIEWS_SUCCESS,
+      payload: data.reviews,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_REVIEWS_FAIL,
       payload: error.response.data.message,
     });
   }

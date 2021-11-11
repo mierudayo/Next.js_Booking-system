@@ -187,3 +187,13 @@ export const allAdminRooms = catchAsyncError(async (req, res) => {
     rooms,
   });
 });
+
+// Get all Review - Admin   =>  (GET) /api/reviews
+export const getAdminReviews = catchAsyncError(async (req, res) => {
+  const room = await Room.findById(req.query.id);
+
+  res.status(200).json({
+    success: true,
+    reviews: room.reviews,
+  });
+});
