@@ -1,8 +1,8 @@
 import React from "react";
 import { getSession } from "next-auth/client";
 
-import { Layout } from "../../components/layout/Layout";
 import { RoomReviews } from "../../components/admin/RoomReviews";
+import { Layout } from "../../components/layouts/Layout";
 
 const RoomReviewsPage = () => {
   return (
