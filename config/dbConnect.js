@@ -4,7 +4,7 @@ export const dbConnect = () => {
   if (connection.readyState > 1) {
     return;
   }
-  connect(process.env.DB_LOCAL_URI, {
+  connect(process.env.DB_URI, {
     useNewUrlParser: true,
   });
 };
