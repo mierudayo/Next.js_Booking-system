@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node utils/seeder"
   },
   "dependencies": {
     "@stripe/stripe-js": "^1.21.0",
