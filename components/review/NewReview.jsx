@@ -81,7 +81,6 @@ export const NewReview = () => {
         }
       });
     }
-    console.log(rating);
   }
 
   return (

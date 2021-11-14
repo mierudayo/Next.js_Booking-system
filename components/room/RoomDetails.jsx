@@ -52,10 +52,8 @@ export const RoomDetails = () => {
 
   const onDatesChange = ({ startDate, endDate }) => {
     if (focusedInput === "startDate") {
-      console.log(`start: ${startDate}`);
       setCheckInDate(startDate);
     } else {
-      console.log(`end: ${endDate}`);
       setCheckOutDate(endDate);
     }
 
