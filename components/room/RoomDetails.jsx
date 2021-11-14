@@ -25,7 +25,7 @@ import { ListReviews } from "../review/ListReviews";
 export const RoomDetails = () => {
   const [checkInDate, setCheckInDate] = useState();
   const [checkOutDate, setCheckOutDate] = useState();
-  const [focusedInput, setFocusedInput] = useState(null);
+  const [focusedInput, setFocusedInput] = useState();
   const [daysOfStay, setDaysOfStay] = useState();
   const [paymentLoading, setPaymentLoading] = useState(false);
 
@@ -51,54 +51,25 @@ export const RoomDetails = () => {
   };
 
   const onDatesChange = ({ startDate, endDate }) => {
-    console.log(startDate);
-    setCheckInDate(startDate);
-    if (endDate) {
-      console.log(checkOutDate);
+    if (focusedInput === "startDate") {
+      console.log(`start: ${startDate}`);
+      setCheckInDate(startDate);
+    } else {
+      console.log(`end: ${endDate}`);
       setCheckOutDate(endDate);
     }
 
-    if (checkInDate && checkOutDate && checkOutDate.isAfter(checkInDate)) {
-      const days = checkInDate.diff(checkOutDate, "days");
-
+    if (startDate && endDate && endDate.isAfter(startDate)) {
+      const days = startDate.diff(endDate, "days");
       setDaysOfStay(days);
 
       dispatch(
-        checkBooking(id, checkInDate.toISOString(), checkOutDate.toISOString())
+        checkBooking(id, startDate.toISOString(), endDate.toISOString())
       );
     }
   };
 
-  const onFocusChange = (focusedInput) => {
-    setFocusedInput(focusedInput);
-  };
-
   const { id } = router.query;
-
-  const newBookingHandler = async () => {
-    const bookingData = {
-      room: router.query.id,
-      checkInDate,
-      checkOutDate,
-      daysOfStay,
-      amountPaid: 90,
-      paymentInfo: {
-        id: "STRIPE_PAYMENT_ID",
-        status: "STRIPE_PAYMENT_STATUS",
-      },
-    };
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post("/api/bookings", bookingData, config);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
 
   const bookRoom = async (id, pricePerNight) => {
     setPaymentLoading(true);
@@ -173,12 +144,12 @@ export const RoomDetails = () => {
           <div className="col-12 col-md-6 col-lg-4">
             <div className="booking-card shadow-lg p-4">
               <p className="price-per-night">
-                <b>${room.pricePerNight}</b> / night
+                <b>$ {room.pricePerNight}</b> / night
               </p>
 
               <hr />
 
-              <p className="mt-5 mb-3">Pick Check In&Out Date</p>
+              <p className="mt-5 mb-3">Pick Check In & Out Date</p>
 
               <DateRangePicker
                 startDate={checkInDate}
@@ -188,7 +159,9 @@ export const RoomDetails = () => {
                 minDate={new moment()}
                 isDayBlocked={isDayBlocked}
                 focusedInput={focusedInput}
-                onFocusChange={onFocusChange}
+                onFocusChange={(focusedInput) => {
+                  setFocusedInput(focusedInput);
+                }}
                 onDatesChange={onDatesChange}
               />
 
