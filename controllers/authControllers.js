@@ -14,7 +14,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Register user => (GET) /api/auth/register
+// Register user => (POST) /api/auth/register
 export const registerUser = catchAsyncError(async (req, res) => {
   const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
     folder: "bookit/avatars",
@@ -23,6 +23,7 @@ export const registerUser = catchAsyncError(async (req, res) => {
   });
 
   const { name, email, password } = req.body;
+
   const user = await User.create({
     name,
     email,
