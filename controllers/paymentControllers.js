@@ -76,6 +76,7 @@ export const webhookCheckout = catchAsyncError(async (req, res) => {
         paymentInfo,
         paidAt: Date.now(),
       });
+
       res.status(200).json({ success: true });
     }
   } catch (error) {

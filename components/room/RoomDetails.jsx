@@ -58,7 +58,7 @@ export const RoomDetails = () => {
     }
 
     if (startDate && endDate && endDate.isAfter(startDate)) {
-      const days = startDate.diff(endDate, "days");
+      const days = endDate.diff(startDate, "days");
       setDaysOfStay(days);
 
       dispatch(
@@ -68,6 +68,34 @@ export const RoomDetails = () => {
   };
 
   const { id } = router.query;
+
+  const newBookingHandler = async () => {
+    const bookingData = {
+      room: router.query.id,
+      checkInDate,
+      checkOutDate,
+      daysOfStay,
+      amountPaid: 90,
+      paymentInfo: {
+        id: "STRIPE_PAYMENT_ID",
+        status: "STRIPE_PAYMENT_STATUS",
+      },
+    };
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post("/api/bookings", bookingData, config);
+
+      console.log(data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   const bookRoom = async (id, pricePerNight) => {
     setPaymentLoading(true);
@@ -183,7 +211,10 @@ export const RoomDetails = () => {
               {available && user && (
                 <button
                   className="btn btn-block py-3 booking-btn"
-                  onClick={() => bookRoom(room._id, room.pricePerNight)}
+                  onClick={() => {
+                    newBookingHandler();
+                    bookRoom(room._id, room.pricePerNight);
+                  }}
                   disabled={
                     bookingLoading || paymentLoading || !available
                       ? true
