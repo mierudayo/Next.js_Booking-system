@@ -90,8 +90,6 @@ export const RoomDetails = () => {
       };
 
       const { data } = await axios.post("/api/bookings", bookingData, config);
-
-      console.log(data);
     } catch (error) {
       console.log(error.response);
     }
