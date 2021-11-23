@@ -75,7 +75,7 @@ export const RoomDetails = () => {
       checkInDate,
       checkOutDate,
       daysOfStay,
-      amountPaid: 90,
+      amountPaid: room.pricePerNight * daysOfStay,
       paymentInfo: {
         id: "STRIPE_PAYMENT_ID",
         status: "STRIPE_PAYMENT_STATUS",
